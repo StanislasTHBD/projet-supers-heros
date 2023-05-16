@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class HerosRequest extends FormRequest
 {
@@ -23,10 +24,18 @@ class HerosRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'incidents' => 'required|array|min:1|max:3',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'phone_number' => 'required|string',
+            'street' => 'required|string',
+            'postal_code' => 'required|string',
+            'city' => 'required|string',
+            'incidents' => [
+                'required',
+                'array',
+                'between:1,3',
+                Rule::exists('incidents', 'id')
+            ],
         ];
     }
 }

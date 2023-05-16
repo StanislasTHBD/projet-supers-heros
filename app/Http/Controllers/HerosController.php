@@ -9,9 +9,24 @@ use Illuminate\Http\Request;
 
 class HerosController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $heros = Heros::all();
+        $query = $request->input('query');
+        $incidentQuery = $request->input('incident_query');
+
+        $heros = Heros::query();
+
+        if ($query) {
+            $heros->where('heros.name', 'like', "%{$query}%");
+        }
+
+        if ($incidentQuery) {
+            $heros->whereHas('incidents', function ($q) use ($incidentQuery) {
+                $q->where('incidents.id', $incidentQuery);
+            });
+        }
+
+        $heros = $heros->get();
         $incidents = Incidents::all();
 
         return view('heros.index', compact('heros', 'incidents'));
@@ -20,19 +35,20 @@ class HerosController extends Controller
     public function create()
     {
         $incidents = Incidents::all();
-        $selectedIncidents = [];
-        return view('heros.form', compact('incidents', 'selectedIncidents'));
+
+        return view('heros.form', compact('incidents'));
     }
 
     public function store(HerosRequest $request)
     {
-        $data = $request->validated();
+        $herosData = $request->validated();
 
-        $incidents = isset($data['incidents']) ? implode(',', (array) $data['incidents']) : '';
+        $heros = Heros::create($herosData);
 
-        $heros = Heros::create(array_merge($data, ['incidents' => $incidents]));
+        $selectedIncidents = $request->input('incidents', []);
+        $heros->incidents()->attach($selectedIncidents);
 
-        return redirect()->route('heros.index')->with('success', 'Heros created successfully.');
+        return redirect()->route('heros.index')->with('success', 'Héros créé avec succès');
     }
 
     public function show(Heros $hero)
@@ -43,24 +59,27 @@ class HerosController extends Controller
     public function edit(Heros $hero)
     {
         $incidents = Incidents::all();
-        $selectedIncidents = old('incidents', isset($hero) ? explode(',', $hero->incidents) : []);
-        return view('heros.form', compact('hero', 'incidents', 'selectedIncidents'));
+
+        return view('heros.form', compact('hero', 'incidents'));
     }
 
     public function update(HerosRequest $request, Heros $hero)
     {
-        $data = $request->validated();
+        $herosData = $request->validated();
 
-        $incidents = isset($data['incidents']) ? implode(',', (array) $data['incidents']) : '';
+        $hero->update($herosData);
 
-        $hero->update(array_merge($data, ['incidents' => $incidents]));
+        $selectedIncidents = $request->input('incidents', []);
+        $hero->incidents()->sync($selectedIncidents);
 
-        return redirect()->route('heros.index')->with('success', 'Heros updated successfully.');
+        return redirect()->route('heros.index')->with('success', 'Héros mis à jour avec succès');
     }
 
     public function destroy(Heros $hero)
     {
+        $hero->incidents()->detach();
         $hero->delete();
-        return redirect()->route('heros.index')->with('success', 'Heros deleted successfully.');
+
+        return redirect()->route('heros.index')->with('success', 'Héros supprimé avec succès');
     }
 }

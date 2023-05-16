@@ -12,4 +12,9 @@ class Incidents extends Model
     protected $fillable = [
         'name'
     ];
+
+    public function heros()
+    {
+        return $this->belongsToMany(Heros::class);
+    }
 }

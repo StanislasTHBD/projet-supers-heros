@@ -14,12 +14,15 @@ class Heros extends Model
         'incidents',
         'latitude',
         'longitude',
-        'phone_number'
+        'phone_number',
+        'street',
+        'postal_code',
+        'city'
     ];
 
     public function incidents()
     {
-        return $this->belongsToMany(Incidents::class);
+        return $this->belongsToMany(Incidents::class, 'hero_incident','hero_id', 'incident_id');
     }
 
 }
