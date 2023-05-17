@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DeclarationsController;
 use App\Http\Controllers\HerosController;
 use App\Http\Controllers\IncidentsController;
 use Illuminate\Support\Facades\Route;
@@ -33,4 +34,12 @@ Route::post('/incidents', [IncidentsController::class, 'store'])->name('incident
 Route::get('/incidents/{incident}/edit', [IncidentsController::class, 'edit'])->name('incidents.edit');
 Route::put('/incidents/{incident}', [IncidentsController::class, 'update'])->name('incidents.update');
 Route::delete('/incidents/{incident}', [IncidentsController::class, 'destroy'])->name('incidents.destroy');
+
+Route::get('/declarations', [DeclarationsController::class, 'index'])->name('declarations.index');
+Route::get('/declarations/create', [DeclarationsController::class, 'create'])->name('declarations.create');
+Route::post('/declarations', [DeclarationsController::class, 'store'])->name('declarations.store');
+Route::get('/declarations/{declaration}', [DeclarationsController::class, 'show'])->name('declarations.show');
+Route::get('/declarations/{declaration}/edit', [DeclarationsController::class, 'edit'])->name('declarations.edit');
+Route::put('/declarations/{declaration}', [DeclarationsController::class, 'update'])->name('declarations.update');
+Route::delete('/declarations/{declaration}', [DeclarationsController::class, 'destroy'])->name('declarations.destroy');
 
