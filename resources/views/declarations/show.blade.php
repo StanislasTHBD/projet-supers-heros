@@ -3,36 +3,84 @@
 @section('title', 'Détails de la Déclaration')
 
 @section('content')
-    <div class="container">
-        <h1>Détails de la Déclaration</h1>
 
-        <div>
-            <h2>{{ $declaration->incident->name }}</h2>
+<div class="content-container">
+    <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
+        <div class="card-body">
+            <h1 class="card-title">Détails de la Déclaration</h1>
+            <hr>
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="card bg-dark mb-3 text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Incident</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <h5>{{ $declaration->incident->name }}</h5>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="map" class="rounded-3" style="height: 500px;"></div>
+            <hr>
+            <div class="text-center">
+                <h2>Héros disponibles dans un rayon de 50 km</h2>
+            </div>
+            <br/>
+            <div class="row" id="heroes-list">
+            </div>
         </div>
-
-        <div id="map" style="height: 500px;"></div>
-
-        <br/>
-
-        <h2>Héros disponibles dans un rayon de 50 km :</h2>
-
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Téléphone</th>
-                    <th>Incident</th>
-                    <th>Localisation (lat, lon)</th>
-                    <th>Distance (en km)</th>
-                </tr>
-                </thead>
-                <tbody id="heroes-list">
-                </tbody>
-            </table>
-        </div>
-
     </div>
+</div>
+
+<style>
+    html, body {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url({{ asset('image/fd24.jpg') }});
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        z-index: -1;
+    }
+
+    .content-container {
+        padding: 150px 300px;
+    }
+
+    .content-container {
+        padding: 150px 300px;
+    }
+
+    @media (max-width: 1350px) {
+        .content-container {
+            padding: 150px 50px;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .content-container {
+            padding: 150px 40px;
+        }
+    }
+
+    @media (max-width: 850px) {
+        .content-container {
+            padding: 150px 30px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .content-container {
+            padding: 150px 15px;
+        }
+    }
+</style>
 
     <script>
         function initMap(latitude, longitude) {
@@ -97,47 +145,21 @@
                 return a.distance - b.distance;
             });
 
-
             if (heroesWithDistance.length === 0) {
-                var noHeroesRow = document.createElement('tr');
-                var noHeroesCell = document.createElement('td');
-                noHeroesCell.setAttribute('colspan', '5');
-
-                var noHeroesHeading = document.createElement('h5');
-                noHeroesHeading.textContent = 'Aucun héros disponible dans un rayon de 50 km.';
-                noHeroesCell.appendChild(noHeroesHeading);
-
-                noHeroesRow.appendChild(noHeroesCell);
-                document.getElementById('heroes-list').appendChild(noHeroesRow);
+                var noHeroesCard = document.createElement('div');
+                noHeroesCard.classList.add('col-md-12');
+                noHeroesCard.innerHTML = '<div class="card bg-dark mb-3"><div class="card-body"><h5 class="card-title">Aucun héros disponible dans un rayon de 50 km.</h5></div></div>';
+                document.getElementById('heroes-list').appendChild(noHeroesCard);
             } else {
-                heroesWithDistance.forEach(function (heroData) {
+                heroesWithDistance.forEach(function(heroData) {
                     var hero = heroData.hero;
                     var heroLatitude = hero.latitude;
                     var heroLongitude = hero.longitude;
 
-                    var row = document.createElement('tr');
-
-                    var nameCell = document.createElement('td');
-                    nameCell.textContent = hero.name;
-                    row.appendChild(nameCell);
-
-                    var phoneCell = document.createElement('td');
-                    phoneCell.textContent = hero.phone_number;
-                    row.appendChild(phoneCell);
-
-                    var incidentsCell = document.createElement('td');
-                    incidentsCell.textContent = incidentsString;
-                    row.appendChild(incidentsCell);
-
-                    var locationCell = document.createElement('td');
-                    locationCell.textContent = '(' + heroLatitude + ', ' + heroLongitude + ')';
-                    row.appendChild(locationCell);
-
-                    var distanceCell = document.createElement('td');
-                    distanceCell.textContent = heroData.distanceHero + ' km';
-                    row.appendChild(distanceCell);
-
-                    document.getElementById('heroes-list').appendChild(row);
+                    var heroCard = document.createElement('div');
+                    heroCard.classList.add('col-md-6');
+                    heroCard.innerHTML = '<div class="card bg-dark mb-3"><div class="card-body"><h5 class="card-title">' + hero.name + '</h5><p class="card-text">Téléphone: ' + hero.phone_number + '</p><p class="card-text">Incidents: ' + incidentsString + '</p><p class="card-text">Localisation: (' + heroLatitude + ', ' + heroLongitude + ')</p><p class="card-text">Distance: ' + heroData.distanceHero + ' km</p></div></div>';
+                    document.getElementById('heroes-list').appendChild(heroCard);
                 });
             }
         }

@@ -3,74 +3,127 @@
 @section('title', 'Liste des Héros')
 
 @section('content')
-    <div class="container">
-        <h1>Liste des Héros</h1>
+    <div class="content-container">
 
-        <div class="mb-3">
-            <a href="{{ route('heros.create') }}" class="btn btn-primary">Créer un héros</a>
-        </div>
-
-        <div id="map" style="height: 500px;"></div>
-
-        <hr>
-
-        <form action="{{ route('heros.index') }}" method="GET" class="form-inline">
-            <div class="row">
-                <div class="col-md-4 mb-2">
-                    <select name="incident_query" class="form-control">
-                        <option value="">Rechercher par incident</option>
-                        @foreach ($incidents as $incident)
-                            <option value="{{ $incident->id }}" {{ request('incident_query') == $incident->id ? 'selected' : '' }}>{{ $incident->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-4 mb-2">
-                    <input type="text" name="query" value="{{ request('query') }}" class="form-control" placeholder="Rechercher par nom de héros">
-                </div>
-                <div class="col-md-4 mb-2">
-                    <button type="submit" class="btn btn-primary">Rechercher</button>
-                </div>
+        <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="card-title">Liste des Héros</h2>
+                <a href="{{ route('heros.create') }}" class="btn btn-primary">Créer un héros</a>
             </div>
-        </form>
+            <div class="card-body">
+                <div id="map" class="rounded-3" style="height: 500px;"></div>
 
+                <hr>
 
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Incidents</th>
-                <th>Localisation (lat, lon)</th>
-                <th>Téléphone</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach ($heros as $hero)
-                <tr>
-                    <td>{{ $hero->name }}</td>
-                    <td>
-                        <ul>
-                            @foreach ($hero->incidents as $incident)
-                                <li>{{ $incident->name }}</li>
-                            @endforeach
-                        </ul>
-                    </td>
-                    <td>{{ $hero->latitude }}, {{ $hero->longitude }}</td>
-                    <td>{{ $hero->phone_number }}</td>
-                    <td>
-                        <a href="{{ route('heros.show', $hero) }}" class="btn btn-primary">Visualiser</a>
-                        <a href="{{ route('heros.edit', $hero) }}" class="btn btn-secondary">Modifier</a>
-                        <form action="{{ route('heros.destroy', $hero) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Etes-vous certain de vouloir continuer ?')">Supprimer</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+                <form action="{{ route('heros.index') }}" method="GET" class="form-inline">
+                    <div class="row">
+                        <div class="col-md-5 mb-2">
+                            <select name="incident_query" class="form-control">
+                                <option value="">Rechercher par incident</option>
+                                @foreach ($incidents as $incident)
+                                    <option value="{{ $incident->id }}" {{ request('incident_query') == $incident->id ? 'selected' : '' }}>{{ $incident->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-5 mb-2">
+                            <input type="text" name="query" value="{{ request('query') }}" class="form-control" placeholder="Rechercher par nom de héros">
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <button type="submit" class="btn btn-primary">Rechercher</button>
+                        </div>
+                    </div>
+                </form>
+
+                <br/>
+
+                @foreach ($heros as $hero)
+                    <div class="card mb-3 bg-dark bg-opacity-75 border-opacity-50 text-light">
+                        <div class="card-header">
+                            <h3 class="card-title">{{ $hero->name }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h4>Information du héro :</h4>
+                                    <p>Téléphone: {{ $hero->phone_number }}</p>
+                                    <p>Localisation (lat, lon): {{ $hero->latitude }}, {{ $hero->longitude }}</p>
+                                </div>
+                                <div class="col">
+                                    <h4 class="card-text">Liste des incidents:</h4>
+                                    @foreach ($hero->incidents as $incident)
+                                        <p class="card-text">{{ $incident->name }}</p>
+                                    @endforeach
+                                </div>
+
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col d-flex justify-content-center">
+                                    <a href="{{ route('heros.show', $hero) }}" class="btn btn-primary">Visualiser</a>
+                                </div>
+                                <div class="col d-flex justify-content-center">
+                                    <a href="{{ route('heros.edit', $hero) }}" class="btn btn-secondary">Modifier</a>
+                                </div>
+                                <div class="col d-flex justify-content-center">
+                                    <form action="{{ route('heros.destroy', $hero) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Etes-vous certain de vouloir continuer ?')">Supprimer</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
     </div>
+
+    <style>
+        html, body {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url({{ asset('image/fd6.jpg') }});
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -1;
+        }
+
+        .content-container {
+            padding: 150px 300px;
+        }
+
+        .content-container {
+            padding: 150px 300px;
+        }
+
+        @media (max-width: 1350px) {
+            .content-container {
+                padding: 150px 50px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .content-container {
+                padding: 150px 40px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .content-container {
+                padding: 150px 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .content-container {
+                padding: 150px 15px;
+            }
+        }
+    </style>
 
     <script>
         var map = L.map('map', {

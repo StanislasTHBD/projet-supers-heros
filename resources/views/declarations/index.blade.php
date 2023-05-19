@@ -3,40 +3,101 @@
 @section('title', 'Liste des Déclarations')
 
 @section('content')
-    <h1>Liste des Déclarations</h1>
+    <div class="content-container">
 
-    <a href="{{ route('declarations.create') }}" class="btn btn-primary mb-3">Créer une déclaration</a>
+        <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="card-title">Liste des Déclarations</h2>
+                <a href="{{ route('declarations.create') }}" class="btn btn-primary">Créer une déclaration</a>
+            </div>
+            <div class="card-body">
+                <div id="map" class="rounded-3" style="height: 500px;"></div>
 
-    <div id="map" style="height: 500px;"></div>
+                <hr>
 
-    <table class="table table-striped">
-        <thead class="thead-dark">
-        <tr>
-            <th>Ville</th>
-            <th>Incident</th>
-            <th>Localisation (lat, lon)</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach ($declarations as $declaration)
-            <tr>
-                <td>{{ $declaration->city }}</td>
-                <td>{{ $declaration->incident->name }}</td>
-                <td>{{ $declaration->latitude }}, {{ $declaration->longitude }}</td>
-                <td>
-                    <a href="{{ route('declarations.show', ['declaration' => $declaration->id]) }}" class="btn btn-primary">Visualiser</a>
-                    <a href="{{ route('declarations.edit', ['declaration' => $declaration->id]) }}" class="btn btn-secondary">Modifier</a>
-                    <form method="POST" action="{{ route('declarations.destroy', ['declaration' => $declaration->id]) }}" style="display: inline-block">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Etes-vous certain de vouloir continuer ?')">Supprimer</button>
-                    </form>
-                </td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
+                @foreach ($declarations as $declaration)
+                    <div class="card mb-3 bg-dark bg-opacity-75 border-opacity-50 text-light">
+                        <div class="card-header">
+                            <h3 class="card-title">{{ $declaration->city }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h4>Information de l'incident :</h4>
+                                    <p>Incident: {{ $declaration->incident->name }}</p>
+                                    <p>Localisation (lat, lon): {{ $declaration->latitude }}, {{ $declaration->longitude }}</p>
+                                </div>
+
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col d-flex justify-content-center">
+                                    <a href="{{ route('declarations.show', ['declaration' => $declaration->id]) }}" class="btn btn-primary">Visualiser</a>
+                                </div>
+                                <div class="col d-flex justify-content-center">
+                                    <a href="{{ route('declarations.edit', ['declaration' => $declaration->id]) }}" class="btn btn-secondary">Modifier</a>
+                                </div>
+                                <div class="col d-flex justify-content-center">
+                                    <form method="POST" action="{{ route('declarations.destroy', ['declaration' => $declaration->id]) }}" style="display: inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Etes-vous certain de vouloir continuer ?')">Supprimer</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <style>
+        html, body {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url({{ asset('image/fd22.jpg') }});
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -1;
+        }
+
+        .content-container {
+            padding: 150px 300px;
+        }
+
+        .content-container {
+            padding: 150px 300px;
+        }
+
+        @media (max-width: 1350px) {
+            .content-container {
+                padding: 150px 50px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .content-container {
+                padding: 150px 40px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .content-container {
+                padding: 150px 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .content-container {
+                padding: 150px 15px;
+            }
+        }
+    </style>
+
 
     @if ($declarations->isNotEmpty())
         <script>

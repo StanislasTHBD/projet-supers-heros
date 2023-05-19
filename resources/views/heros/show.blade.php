@@ -3,14 +3,14 @@
 @section('title', 'Visualiser l\'héros')
 
 @section('content')
-    <div class="container">
-        <div class="card">
+    <div class="content-container">
+        <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
             <div class="card-body">
                 <h1 class="card-title">{{ $hero->name }}</h1>
                 <hr>
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="card mb-3">
+                        <div class="card bg-dark mb-3">
                             <div class="card-body">
                                 <h5 class="card-title">Incidents</h5>
                                 <ul class="list-group">
@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="card mb-3">
+                        <div class="card bg-dark mb-3">
                             <div class="card-body">
                                 <h5 class="card-title">Téléphone</h5>
                                 <p class="card-text">{{ $hero->phone_number }}</p>
@@ -39,12 +39,58 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <div id="map" style="height: 500px;"></div>
+                        <div id="map" class="rounded-3" style="height: 500px;"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <style>
+        html, body {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url({{ asset('image/fd7.jpg') }});
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -1;
+        }
+
+        .content-container {
+            padding: 150px 300px;
+        }
+
+        .content-container {
+            padding: 150px 300px;
+        }
+
+        @media (max-width: 1350px) {
+            .content-container {
+                padding: 150px 50px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .content-container {
+                padding: 150px 40px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .content-container {
+                padding: 150px 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .content-container {
+                padding: 150px 15px;
+            }
+        }
+    </style>
 
     <script>
         var heroLatitude = {{ $hero->latitude }};
