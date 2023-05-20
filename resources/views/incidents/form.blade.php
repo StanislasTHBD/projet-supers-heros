@@ -4,44 +4,42 @@
 
 @section('content')
 
-    <div class="content-container">
-        @if ($errors->any())
-            <div class="alert alert-danger mt-3">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
-            <div class="card-header">
-                <h2>{{ isset($incident) ? 'Modifier l\'Incident' : 'Créer un Incident' }}</h2>
-            </div>
+    @if ($errors->any())
+        <div class="alert alert-danger mt-3">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
+        <div class="card-header">
+            <h2>{{ isset($incident) ? 'Modifier l\'Incident' : 'Créer un Incident' }}</h2>
+        </div>
 
-            <div class="card-body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-8 mx-auto">
-                            <form action="{{ isset($incident) ? route('incidents.update', $incident) : route('incidents.store') }}" method="POST">
-                                @csrf
-                                @if (isset($incident))
-                                    @method('PUT')
-                                @endif
+        <div class="card-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 mx-auto">
+                        <form action="{{ isset($incident) ? route('incidents.update', $incident) : route('incidents.store') }}" method="POST">
+                            @csrf
+                            @if (isset($incident))
+                                @method('PUT')
+                            @endif
 
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Nom</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', isset($incident) ? $incident->name : '') }}">
-                                    @error('name')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Nom</label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', isset($incident) ? $incident->name : '') }}">
+                                @error('name')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
                                 </div>
+                                @enderror
+                            </div>
 
-                                <button type="submit" class="btn btn-primary">Valider</button>
-                            </form>
-                        </div>
+                            <button type="submit" class="btn btn-primary">Valider</button>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -16,12 +16,17 @@ class Heros extends Model
         'phone_number',
         'street',
         'postal_code',
-        'city'
+        'city',
+        'user_id'
     ];
 
     public function incidents()
     {
         return $this->belongsToMany(Incidents::class, 'hero_incident','hero_id', 'incident_id');
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 
 }

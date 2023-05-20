@@ -3,64 +3,65 @@
 @section('title', 'Liste des Héros')
 
 @section('content')
-    <div class="content-container">
 
-        <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h2 class="card-title">Liste des Héros</h2>
+    @include('layouts.notify')
+    <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="card-title">Liste des Héros</h2>
+            @if(Auth::user()->heros()->exists())
+                <a href="{{ route('heros.show', Auth::user()->heros->id) }}" class="btn btn-dark">Voir son héros</a>
+            @else
                 <a href="{{ route('heros.create') }}" class="btn btn-primary">Créer un héros</a>
-            </div>
-            <div class="card-body">
-                <div id="map" class="rounded-3" style="height: 500px;"></div>
-
-                <hr>
-
-                <form action="{{ route('heros.index') }}" method="GET" class="form-inline">
-                    <div class="row">
-                        <div class="col-md-5 mb-2">
-                            <select name="incident_query" class="form-control">
-                                <option value="">Rechercher par incident</option>
-                                @foreach ($incidents as $incident)
-                                    <option value="{{ $incident->id }}" {{ request('incident_query') == $incident->id ? 'selected' : '' }}>{{ $incident->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-5 mb-2">
-                            <input type="text" name="query" value="{{ request('query') }}" class="form-control" placeholder="Rechercher par nom de héros">
-                        </div>
-                        <div class="col-md-2 mb-2">
-                            <button type="submit" class="btn btn-primary">Rechercher</button>
-                        </div>
+            @endif
+        </div>
+        <div class="card-body">
+            <div id="map" class="rounded-3" style="height: 500px;"></div>
+            <hr>
+            <form action="{{ route('heros.index') }}" method="GET" class="form-inline">
+                <div class="row">
+                    <div class="col-md-5 mb-2">
+                        <select name="incident_query" class="form-control">
+                            <option value="">Rechercher par incident</option>
+                            @foreach ($incidents as $incident)
+                                <option value="{{ $incident->id }}" {{ request('incident_query') == $incident->id ? 'selected' : '' }}>{{ $incident->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                </form>
-
-                <br/>
-
-                @foreach ($heros as $hero)
-                    <div class="card mb-3 bg-dark bg-opacity-75 border-opacity-50 text-light">
-                        <div class="card-header">
-                            <h3 class="card-title">{{ $hero->name }}</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <h4>Information du héro :</h4>
-                                    <p>Téléphone: {{ $hero->phone_number }}</p>
-                                    <p>Localisation (lat, lon): {{ $hero->latitude }}, {{ $hero->longitude }}</p>
-                                </div>
-                                <div class="col">
-                                    <h4 class="card-text">Liste des incidents:</h4>
-                                    @foreach ($hero->incidents as $incident)
-                                        <p class="card-text">{{ $incident->name }}</p>
-                                    @endforeach
-                                </div>
-
+                    <div class="col-md-5 mb-2">
+                        <input type="text" name="query" value="{{ request('query') }}" class="form-control" placeholder="Rechercher par nom de héros">
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <button type="submit" class="btn btn-primary">Rechercher</button>
+                    </div>
+                </div>
+            </form>
+            <br/>
+            @foreach ($heros as $hero)
+                <div class="card mb-3 bg-dark bg-opacity-75 border-opacity-50 text-light">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ $hero->name }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h4>Information du héro :</h4>
+                                <p>Téléphone: {{ $hero->phone_number }}</p>
+                                <p>Localisation (lat, lon): {{ $hero->latitude }}, {{ $hero->longitude }}</p>
                             </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col d-flex justify-content-center">
-                                    <a href="{{ route('heros.show', $hero) }}" class="btn btn-primary">Visualiser</a>
-                                </div>
+                            <div class="col">
+                                <h4 class="card-text">Liste des incidents:</h4>
+                                @foreach ($hero->incidents as $incident)
+                                    <p class="card-text">{{ $incident->name }}</p>
+                                @endforeach
+                            </div>
+
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col d-flex justify-content-center">
+                                <a href="{{ route('heros.show', $hero) }}" class="btn btn-primary">Visualiser</a>
+                            </div>
+                            @if(Auth::user()->id === $hero->user_id)
                                 <div class="col d-flex justify-content-center">
                                     <a href="{{ route('heros.edit', $hero) }}" class="btn btn-secondary">Modifier</a>
                                 </div>
@@ -71,11 +72,11 @@
                                         <button type="submit" class="btn btn-danger" onclick="return confirm('Etes-vous certain de vouloir continuer ?')">Supprimer</button>
                                     </form>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @endforeach
         </div>
     </div>
 

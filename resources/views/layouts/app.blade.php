@@ -17,8 +17,9 @@
 @include('layouts.nav')
 @include('layouts.notify')
 
+<div class="content-container">
 @yield('content')
-
+</div>
 
 </body>
 </html>

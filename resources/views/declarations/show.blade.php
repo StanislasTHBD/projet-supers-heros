@@ -4,7 +4,6 @@
 
 @section('content')
 
-<div class="content-container">
     <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
         <div class="card-body">
             <h1 class="card-title">Détails de la Déclaration</h1>
@@ -34,7 +33,6 @@
             </div>
         </div>
     </div>
-</div>
 
 <style>
     html, body {

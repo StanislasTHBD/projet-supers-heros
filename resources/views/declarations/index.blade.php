@@ -3,14 +3,20 @@
 @section('title', 'Liste des Déclarations')
 
 @section('content')
-    <div class="content-container">
 
-        <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h2 class="card-title">Liste des Déclarations</h2>
-                <a href="{{ route('declarations.create') }}" class="btn btn-primary">Créer une déclaration</a>
-            </div>
-            <div class="card-body">
+    <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="card-title">Liste des Déclarations</h2>
+            <a href="{{ route('declarations.create') }}" class="btn btn-primary">Créer une déclaration</a>
+        </div>
+        <div class="card-body">
+
+            @if (count($declarations) === 0)
+                <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                    <h4>Aucune déclaration disponible.</h4>
+                </div>
+            @else
+
                 <div id="map" class="rounded-3" style="height: 500px;"></div>
 
                 <hr>
@@ -48,7 +54,7 @@
                         </div>
                     </div>
                 @endforeach
-            </div>
+            @endif
         </div>
     </div>
 

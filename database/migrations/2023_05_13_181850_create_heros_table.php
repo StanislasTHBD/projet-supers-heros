@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('postal_code');
             $table->string('city');
             $table->string('phone_number');
+            $table->unsignedBigInteger('user_id')->unique();
             $table->timestamps();
         });
     }

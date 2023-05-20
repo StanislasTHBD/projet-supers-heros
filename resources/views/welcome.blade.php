@@ -29,17 +29,38 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="card bg-dark bg-opacity-75 border-opacity-50 text-light clickable-div" onclick="window.location.href = '{{ route('heros.create') }}'">
-                                <div class="card-body text-center">
-                                    <h1 class="card-title text-light">Prêt à devenir un héros ?</h1>
-                                    <p class="card-text text-light">Inscrivez-vous dès maintenant et rejoignez notre équipe !</p>
+                        @auth
+                            @if(Auth::user()->heros()->exists())
+                                <div class="col-md-6">
+                                    <div class="card bg-dark bg-opacity-75 border-opacity-50 text-light clickable-div" onclick="window.location.href = '{{ route('heros.show', Auth::user()->heros->id) }}'">
+                                        <div class="card-body text-center">
+                                            <h1 class="card-title text-light">Voir son héros !</h1>
+                                            <p class="card-text text-light">Le profil héros, une histoire de courage et de triomphes.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="col-md-6">
+                                    <div class="card bg-dark bg-opacity-75 border-opacity-50 text-light clickable-div" onclick="window.location.href = '{{ route('heros.create') }}'">
+                                        <div class="card-body text-center">
+                                            <h1 class="card-title text-light">Créez votre héros !</h1>
+                                            <p class="card-text text-light">Rejoignez notre équipe d'aventuriers audacieux.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endauth
+                        @guest
+                            <div class="col-md-6">
+                                <div class="card bg-dark bg-opacity-75 border-opacity-50 text-light clickable-div" onclick="window.location.href = '{{ route('register') }}'">
+                                    <div class="card-body text-center">
+                                        <h1 class="card-title text-light">Prêt à devenir un héros ?</h1>
+                                        <p class="card-text text-light">Inscrivez-vous dès maintenant et rejoignez notre équipe !</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endguest
                     </div>
-
-
                 </div>
             </div>
         </div>

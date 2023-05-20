@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DeclarationsController;
 use App\Http\Controllers\HerosController;
 use App\Http\Controllers\IncidentsController;
@@ -20,13 +22,23 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-Route::get('/heros', [HerosController::class, 'index'])->name('heros.index');
-Route::get('/heros/create', [HerosController::class, 'create'])->name('heros.create');
-Route::post('/heros', [HerosController::class, 'store'])->name('heros.store');
-Route::get('/heros/{hero}', [HerosController::class, 'show'])->name('heros.show');
-Route::get('/heros/{hero}/edit', [HerosController::class, 'edit'])->name('heros.edit');
-Route::put('/heros/{hero}', [HerosController::class, 'update'])->name('heros.update');
-Route::delete('/heros/{hero}', [HerosController::class, 'destroy'])->name('heros.destroy');
+
+Route::get('/register', [RegisterController::class, 'index'])->name('register');
+Route::post('/register', [RegisterController::class, 'register'])->name('register');
+Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::get('/heros', [HerosController::class, 'index'])->name('heros.index');
+    Route::get('/heros/create', [HerosController::class, 'create'])->name('heros.create');
+    Route::post('/heros', [HerosController::class, 'store'])->name('heros.store');
+    Route::get('/heros/{hero}', [HerosController::class, 'show'])->name('heros.show');
+    Route::get('/heros/{hero}/edit', [HerosController::class, 'edit'])->name('heros.edit');
+    Route::put('/heros/{hero}', [HerosController::class, 'update'])->name('heros.update');
+    Route::delete('/heros/{hero}', [HerosController::class, 'destroy'])->name('heros.destroy');
+});
 
 Route::get('/incidents', [IncidentsController::class, 'index'])->name('incidents.index');
 Route::get('/incidents/create', [IncidentsController::class, 'create'])->name('incidents.create');

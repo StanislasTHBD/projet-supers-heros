@@ -4,96 +4,94 @@
 
 @section('content')
 
-    <div class="content-container">
-        @if ($errors->any())
-            <div class="alert alert-danger mt-3">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
-            <div class="card-header">
-                <h1>{{ isset($declaration) ? 'Modifier la Déclaration' : 'Créer une Déclaration' }}</h1>
-            </div>
-            <div class="card-body">
-                <div id="map" class="rounded-3" style="height: 500px;"></div>
+    @if ($errors->any())
+        <div class="alert alert-danger mt-3">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
+        <div class="card-header">
+            <h1>{{ isset($declaration) ? 'Modifier la Déclaration' : 'Créer une Déclaration' }}</h1>
+        </div>
+        <div class="card-body">
+            <div id="map" class="rounded-3" style="height: 500px;"></div>
 
-                <br/>
+            <br/>
 
-                <form action="{{ isset($declaration) ? route('declarations.update', $declaration) : route('declarations.store') }}" method="POST">
-                    @csrf
-                    @if (isset($declaration))
-                        @method('PUT')
-                    @endif
+            <form action="{{ isset($declaration) ? route('declarations.update', $declaration) : route('declarations.store') }}" method="POST">
+                @csrf
+                @if (isset($declaration))
+                    @method('PUT')
+                @endif
 
-                    <div class="card mb-3 bg-dark bg-opacity-75 border-opacity-50 text-light">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="incident_id" class="form-label">Incident</label>
-                                        <select class="form-control @error('incident_id') is-invalid @enderror" id="incident_id" name="incident_id">
-                                            <option value="">Choisissez un incident</option>
-                                            @foreach ($incidents as $incident)
-                                                <option value="{{ $incident->id }}" {{ old('incident_id', isset($declaration) && $declaration->incident_id == $incident->id ? 'selected' : '') }}>
-                                                    {{ $incident->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('incident_id')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
+                <div class="card mb-3 bg-dark bg-opacity-75 border-opacity-50 text-light">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="incident_id" class="form-label">Incident</label>
+                                    <select class="form-control @error('incident_id') is-invalid @enderror" id="incident_id" name="incident_id">
+                                        <option value="">Choisissez un incident</option>
+                                        @foreach ($incidents as $incident)
+                                            <option value="{{ $incident->id }}" {{ old('incident_id', isset($declaration) && $declaration->incident_id == $incident->id ? 'selected' : '') }}>
+                                                {{ $incident->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('incident_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="city" class="form-label">Ville</label>
-                                        <input type="text" class="form-control text-bg-secondary @error('city') is-invalid @enderror" id="city" name="city" value="{{ old('city', isset($declaration) ? $declaration->city : '') }}" readonly>
-                                        @error('city')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
+                                    @enderror
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="latitude" class="form-label">Latitude</label>
-                                        <input type="text" class="form-control text-bg-secondary @error('latitude') is-invalid @enderror" id="latitude" name="latitude" value="{{ old('latitude', isset($declaration) ? $declaration->latitude : '') }}" readonly>
-                                        @error('latitude')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="city" class="form-label">Ville</label>
+                                    <input type="text" class="form-control text-bg-secondary @error('city') is-invalid @enderror" id="city" name="city" value="{{ old('city', isset($declaration) ? $declaration->city : '') }}" readonly>
+                                    @error('city')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
                                     </div>
+                                    @enderror
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="longitude" class="form-label">Longitude</label>
-                                        <input type="text" class="form-control text-bg-secondary @error('longitude') is-invalid @enderror" id="longitude" name="longitude" value="{{ old('longitude', isset($declaration) ? $declaration->longitude : '') }}" readonly>
-                                        @error('longitude')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="latitude" class="form-label">Latitude</label>
+                                    <input type="text" class="form-control text-bg-secondary @error('latitude') is-invalid @enderror" id="latitude" name="latitude" value="{{ old('latitude', isset($declaration) ? $declaration->latitude : '') }}" readonly>
+                                    @error('latitude')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
                                     </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="longitude" class="form-label">Longitude</label>
+                                    <input type="text" class="form-control text-bg-secondary @error('longitude') is-invalid @enderror" id="longitude" name="longitude" value="{{ old('longitude', isset($declaration) ? $declaration->longitude : '') }}" readonly>
+                                    @error('longitude')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Valider</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Valider</button>
+                </div>
+            </form>
         </div>
     </div>
 

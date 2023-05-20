@@ -3,46 +3,45 @@
 @section('title', 'Liste des Incidents')
 
 @section('content')
-    <div class="content-container">
 
-        <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h2 class="card-title">Liste des Incidents</h2>
-                <a href="{{ route('incidents.create') }}" class="btn btn-primary">Créer un incident</a>
-            </div>
+    <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="card-title">Liste des Incidents</h2>
+            <a href="{{ route('incidents.create') }}" class="btn btn-primary">Créer un incident</a>
+        </div>
 
-            <div class="card-body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-8 mx-auto">
-                            <table class="table bg-dark rounded-3 text-light">
-                                <thead>
+        <div class="card-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 mx-auto">
+                        <table class="table bg-dark rounded-3 text-light">
+                            <thead>
+                            <tr class="text-center">
+                                <th>Nom</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach ($incidents as $incident)
                                 <tr class="text-center">
-                                    <th>Nom</th>
-                                    <th>Actions</th>
+                                    <td>{{ $incident->name }}</td>
+                                    <td>
+                                        <a href="{{ route('incidents.edit', $incident) }}" class="btn btn-secondary">Modifier</a>
+                                        <form action="{{ route('incidents.destroy', $incident) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Etes-vous certain de vouloir continuer ?')">Supprimer</button>
+                                        </form>
+                                    </td>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                @foreach ($incidents as $incident)
-                                    <tr class="text-center">
-                                        <td>{{ $incident->name }}</td>
-                                        <td>
-                                            <a href="{{ route('incidents.edit', $incident) }}" class="btn btn-secondary">Modifier</a>
-                                            <form action="{{ route('incidents.destroy', $incident) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Etes-vous certain de vouloir continuer ?')">Supprimer</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
     <style>
         html, body {

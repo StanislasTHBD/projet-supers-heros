@@ -4,151 +4,150 @@
 
 @section('content')
 
-    <div class="content-container">
-        @if ($errors->any())
-            <div class="alert alert-danger mt-3">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
-            <div class="card-header">
-                <h1>{{ isset($hero) ? 'Modifier l\'Héros' : 'Créer un Héros' }}</h1>
+    @if ($errors->any())
+        <div class="alert alert-danger mt-3">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
+        <div class="card-header">
+            <h1>{{ isset($hero) ? 'Modifier l\'Héros' : 'Créer un Héros' }}</h1>
+        </div>
+
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label for="search-city"><h5>Recherche</h5></label>
+                    <div class="input-group">
+                        <input type="text" id="search-city" class="form-control rounded" placeholder="lat, long / ville / code postal">
+                        <div class="col-md-2 d-flex justify-content-center">
+                            <button type="button" id="btn-search" class="btn btn-primary">Rechercher</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="card-body">
-                <div class="row mb-3">
-                    <div class="col-md-12">
-                        <label for="search-city"><h5>Recherche</h5></label>
-                        <div class="input-group">
-                            <input type="text" id="search-city" class="form-control rounded" placeholder="lat, long / ville / code postal">
-                            <div class="col-md-2 d-flex justify-content-center">
-                                <button type="button" id="btn-search" class="btn btn-primary">Rechercher</button>
+            <div id="map" class="rounded-3" style="height: 500px;"></div>
+
+            <br/>
+
+            <form action="{{ isset($hero) ? route('heros.update', $hero) : route('heros.store') }}" method="POST">
+                @csrf
+                @if (isset($hero))
+                    @method('PUT')
+                @endif
+                <input type="text" name="user_id" value="{{ Auth::id() }}" hidden>
+                <div class="card mb-3 bg-dark bg-opacity-75 border-opacity-50 text-light">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label"><h5>Nom</h5></label>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', isset($hero) ? $hero->name : '') }}">
+                                    @error('name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="phone_number" class="form-label"><h5>Téléphone</h5></label>
+                                    <input type="text" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number" name="phone_number" value="{{ old('phone_number', isset($hero) ? $hero->phone_number : '') }}">
+                                    @error('phone_number')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="incidents" class="form-label"><h5>Incidents</h5></label>
+                            <select class="form-select @error('incidents') is-invalid @enderror" name="incidents[]" multiple>
+                                @foreach ($incidents as $incident)
+                                    <option value="{{ $incident->id }}" {{ isset($hero) && in_array($incident->id, $hero->incidents->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                        {{ $incident->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('incidents')
+                            <div class="invalid-feedback">
+                                {{ __('validation.between.numeric', ['attribute' => __('validation.attributes.incidents'), 'min' => 1, 'max' => 3]) }}
+                            </div>
+                            @enderror
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="latitude" class="form-label"><h5>Latitude</h5></label>
+                                    <input type="text" class="form-control text-bg-secondary @error('latitude') is-invalid @enderror" id="latitude" name="latitude" value="{{ old('latitude', isset($hero) ? $hero->latitude : '') }}" readonly>
+                                    @error('latitude')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="longitude" class="form-label"><h5>Longitude</h5></label>
+                                    <input type="text" class="form-control text-bg-secondary @error('longitude') is-invalid @enderror" id="longitude" name="longitude" value="{{ old('longitude', isset($hero) ? $hero->longitude : '') }}" readonly>
+                                    @error('longitude')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="street" class="form-label"><h5>Rue</h5></label>
+                            <input type="text" class="form-control text-bg-secondary @error('street') is-invalid @enderror" id="street" name="street" value="{{ old('street', isset($hero) ? $hero->street : '') }}" readonly>
+                            @error('street')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="postal_code" class="form-label"><h5>Code postale</h5></label>
+                                    <input type="text" class="form-control text-bg-secondary @error('postal_code') is-invalid @enderror" id="postal_code" name="postal_code" value="{{ old('postal_code', isset($hero) ? $hero->postal_code : '') }}" readonly>
+                                    @error('postal_code')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="city" class="form-label"><h5>Ville</h5></label>
+                                    <input type="text" class="form-control text-bg-secondary @error('city') is-invalid @enderror" id="city" name="city" value="{{ old('city', isset($hero) ? $hero->city : '') }}" readonly>
+                                    @error('city')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div id="map" class="rounded-3" style="height: 500px;"></div>
-
-                <br/>
-
-                <form action="{{ isset($hero) ? route('heros.update', $hero) : route('heros.store') }}" method="POST">
-                    @csrf
-                    @if (isset($hero))
-                        @method('PUT')
-                    @endif
-                    <div class="card mb-3 bg-dark bg-opacity-75 border-opacity-50 text-light">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="name" class="form-label"><h5>Nom</h5></label>
-                                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', isset($hero) ? $hero->name : '') }}">
-                                        @error('name')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="phone_number" class="form-label"><h5>Téléphone</h5></label>
-                                        <input type="text" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number" name="phone_number" value="{{ old('phone_number', isset($hero) ? $hero->phone_number : '') }}">
-                                        @error('phone_number')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="incidents" class="form-label"><h5>Incidents</h5></label>
-                                <select class="form-select @error('incidents') is-invalid @enderror" name="incidents[]" multiple>
-                                    @foreach ($incidents as $incident)
-                                        <option value="{{ $incident->id }}" {{ isset($hero) && in_array($incident->id, $hero->incidents->pluck('id')->toArray()) ? 'selected' : '' }}>
-                                            {{ $incident->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('incidents')
-                                <div class="invalid-feedback">
-                                    {{ __('validation.between.numeric', ['attribute' => __('validation.attributes.incidents'), 'min' => 1, 'max' => 3]) }}
-                                </div>
-                                @enderror
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="latitude" class="form-label"><h5>Latitude</h5></label>
-                                        <input type="text" class="form-control text-bg-secondary @error('latitude') is-invalid @enderror" id="latitude" name="latitude" value="{{ old('latitude', isset($hero) ? $hero->latitude : '') }}" readonly>
-                                        @error('latitude')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="longitude" class="form-label"><h5>Longitude</h5></label>
-                                        <input type="text" class="form-control text-bg-secondary @error('longitude') is-invalid @enderror" id="longitude" name="longitude" value="{{ old('longitude', isset($hero) ? $hero->longitude : '') }}" readonly>
-                                        @error('longitude')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="street" class="form-label"><h5>Rue</h5></label>
-                                <input type="text" class="form-control text-bg-secondary @error('street') is-invalid @enderror" id="street" name="street" value="{{ old('street', isset($hero) ? $hero->street : '') }}" readonly>
-                                @error('street')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="postal_code" class="form-label"><h5>Code postale</h5></label>
-                                        <input type="text" class="form-control text-bg-secondary @error('postal_code') is-invalid @enderror" id="postal_code" name="postal_code" value="{{ old('postal_code', isset($hero) ? $hero->postal_code : '') }}" readonly>
-                                        @error('postal_code')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="city" class="form-label"><h5>Ville</h5></label>
-                                        <input type="text" class="form-control text-bg-secondary @error('city') is-invalid @enderror" id="city" name="city" value="{{ old('city', isset($hero) ? $hero->city : '') }}" readonly>
-                                        @error('city')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Valider</button>
-                    </div>
-                </form>
-            </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Valider</button>
+                </div>
+            </form>
         </div>
     </div>
 

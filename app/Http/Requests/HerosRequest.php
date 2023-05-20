@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class HerosRequest extends FormRequest
@@ -22,6 +23,8 @@ class HerosRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = Auth::id();
+
         return [
             'name' => 'required|string',
             'latitude' => 'required|numeric',
@@ -35,6 +38,13 @@ class HerosRequest extends FormRequest
                 'array',
                 'between:1,3',
                 Rule::exists('incidents', 'id')
+            ],
+            'user_id' => [
+                'required',
+                'integer',
+                Rule::exists('users', 'id')->where(function ($query) use ($userId) {
+                    $query->where('id', $userId);
+                })
             ],
         ];
     }

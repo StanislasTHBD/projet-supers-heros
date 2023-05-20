@@ -3,44 +3,56 @@
 @section('title', 'Visualiser l\'héros')
 
 @section('content')
-    <div class="content-container">
-        <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
-            <div class="card-body">
-                <h1 class="card-title">{{ $hero->name }}</h1>
-                <hr>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card bg-dark mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Incidents</h5>
-                                <ul class="list-group">
-                                    @foreach ($hero->incidents as $incident)
-                                        <li class="list-group-item">{{ $incident->name }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
+
+    <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h1 class="card-title">{{ $hero->name }}</h1>
+            @if(Auth::user()->id === $hero->user_id)
+                <div class="col-auto">
+                    <div class="btn-group" role="group" aria-label="Actions">
+                        <a href="{{ route('heros.edit', $hero) }}" class="btn btn-secondary">Modifier</a>
+                        <form action="{{ route('heros.destroy', $hero) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Etes-vous certain de vouloir continuer ?')">Supprimer</button>
+                        </form>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card bg-dark mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Téléphone</h5>
-                                <p class="card-text">{{ $hero->phone_number }}</p>
-                                <hr>
-                                <h5 class="card-title">Adresse</h5>
-                                <p class="card-text">{{ $hero->street }}</p>
-                                <p class="card-text">{{ $hero->postal_code }} - {{ $hero->city }}</p>
-                                <hr>
-                                <h5 class="card-title">Localisation (lat, lon)</h5>
-                                <p class="card-text">{{ $hero->latitude }}, {{ $hero->longitude }}</p>
-                            </div>
+                </div>
+            @endif
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card bg-dark mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Incidents</h5>
+                            <ul class="list-group">
+                                @foreach ($hero->incidents as $incident)
+                                    <li class="list-group-item">{{ $incident->name }}</li>
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="map" class="rounded-3" style="height: 500px;"></div>
+                <div class="col-md-6">
+                    <div class="card bg-dark mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Téléphone</h5>
+                            <p class="card-text">{{ $hero->phone_number }}</p>
+                            <hr>
+                            <h5 class="card-title">Adresse</h5>
+                            <p class="card-text">{{ $hero->street }}</p>
+                            <p class="card-text">{{ $hero->postal_code }} - {{ $hero->city }}</p>
+                            <hr>
+                            <h5 class="card-title">Localisation (lat, lon)</h5>
+                            <p class="card-text">{{ $hero->latitude }}, {{ $hero->longitude }}</p>
+                        </div>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="map" class="rounded-3" style="height: 500px;"></div>
                 </div>
             </div>
         </div>
