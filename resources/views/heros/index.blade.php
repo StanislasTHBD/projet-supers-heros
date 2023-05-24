@@ -4,7 +4,6 @@
 
 @section('content')
 
-    @include('layouts.notify')
     <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h2 class="card-title">Liste des Héros</h2>

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ route('welcome') }}">Le Site du Héros</a>
 
@@ -8,18 +8,20 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center align-items-center">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('declarations.index') }}">Déclarations</a>
                 </li>
                 @auth
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('heros.index') }}">Héros</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('heros.index') }}">Héros</a>
+                    </li>
+                    @if(Auth::user()->role == 'admin')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('incidents.index') }}">Incidents</a>
+                        </li>
+                    @endif
                 @endauth
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('incidents.index') }}">Incidents</a>
-                </li>
             </ul>
             <ul class="navbar-nav me-2">
                 @guest
@@ -32,7 +34,10 @@
                 @endguest
 
                 @auth
-                    <li class="nav-item">
+                    <li class="nav-item d-flex justify-content-center align-items-center">
+                        <span class="nav-link" style="color: {{ Auth::user()->role === 'admin' ? 'red' : 'orange' }}">{{ Auth::user()->role }}</span>
+                    </li>
+                    <li class="nav-item d-flex justify-content-center align-items-center">
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="nav-link btn">Déconnexion</button>
@@ -43,3 +48,4 @@
         </div>
     </div>
 </nav>
+

@@ -22,7 +22,6 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
 Route::get('/login', [LoginController::class, 'index'])->name('login');
@@ -40,12 +39,14 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/heros/{hero}', [HerosController::class, 'destroy'])->name('heros.destroy');
 });
 
-Route::get('/incidents', [IncidentsController::class, 'index'])->name('incidents.index');
-Route::get('/incidents/create', [IncidentsController::class, 'create'])->name('incidents.create');
-Route::post('/incidents', [IncidentsController::class, 'store'])->name('incidents.store');
-Route::get('/incidents/{incident}/edit', [IncidentsController::class, 'edit'])->name('incidents.edit');
-Route::put('/incidents/{incident}', [IncidentsController::class, 'update'])->name('incidents.update');
-Route::delete('/incidents/{incident}', [IncidentsController::class, 'destroy'])->name('incidents.destroy');
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/incidents', [IncidentsController::class, 'index'])->name('incidents.index');
+    Route::get('/incidents/create', [IncidentsController::class, 'create'])->name('incidents.create');
+    Route::post('/incidents', [IncidentsController::class, 'store'])->name('incidents.store');
+    Route::get('/incidents/{incident}/edit', [IncidentsController::class, 'edit'])->name('incidents.edit');
+    Route::put('/incidents/{incident}', [IncidentsController::class, 'update'])->name('incidents.update');
+    Route::delete('/incidents/{incident}', [IncidentsController::class, 'destroy'])->name('incidents.destroy');
+});
 
 Route::get('/declarations', [DeclarationsController::class, 'index'])->name('declarations.index');
 Route::get('/declarations/create', [DeclarationsController::class, 'create'])->name('declarations.create');

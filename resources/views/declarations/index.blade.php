@@ -107,7 +107,11 @@
 
     @if ($declarations->isNotEmpty())
         <script>
-            var map = L.map('map').setView([{{ $declarations[0]->latitude }}, {{ $declarations[0]->longitude }}], 5);
+            var map = L.map('map',{
+                minZoom: 3,
+                maxZoom: 18,
+                maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180))
+            }).setView([{{ $declarations[0]->latitude }}, {{ $declarations[0]->longitude }}], 5);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'

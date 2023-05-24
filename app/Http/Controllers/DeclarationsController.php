@@ -30,7 +30,7 @@ class DeclarationsController extends Controller
 
         $declaration = Declarations::create($validatedData);
 
-        return redirect()->route('declarations.show', ['declaration' => $declaration->id]);
+        return redirect()->route('declarations.show', ['declaration' => $declaration->id])->with('status-success', 'Déclaration créée avec succès.');
     }
 
     public function show(Declarations $declaration)
@@ -54,13 +54,13 @@ class DeclarationsController extends Controller
 
         $declaration->update($validatedData);
 
-        return redirect()->route('declarations.show', ['declaration' => $declaration->id]);
+        return redirect()->route('declarations.show', ['declaration' => $declaration->id])->with('status-warning', 'Déclaration mise à jour avec succès.');
     }
 
     public function destroy(Declarations $declaration)
     {
         $declaration->delete();
 
-        return redirect()->route('declarations.index');
+        return redirect()->route('declarations.index')->with('status-danger', 'Déclaration supprimée avec succès.');
     }
 }

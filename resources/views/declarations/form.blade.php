@@ -160,11 +160,14 @@
 
         function initMap(latitude, longitude) {
             console.log('initMap');
-            var map = L.map('map').setView([latitude, longitude], 13);
+            var map = L.map('map', {
+                minZoom: 3,
+                maxZoom: 18,
+                maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180))
+            }).setView([latitude, longitude], 13);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-                maxZoom: 18,
             }).addTo(map);
 
             var marker = L.marker([latitude, longitude], { icon: redIcon }).addTo(map);

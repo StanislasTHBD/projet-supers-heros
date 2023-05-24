@@ -77,7 +77,6 @@ class HerosController extends Controller
 
     public function update(HerosRequest $request, Heros $hero)
     {
-
         if ($hero->user_id !== Auth::id()) {
             return redirect()->route('heros.index')->with('status-danger', 'Vous n\'êtes pas autorisé à mettre à jour ce héros.');
         }
@@ -89,12 +88,11 @@ class HerosController extends Controller
         $selectedIncidents = $request->input('incidents', []);
         $hero->incidents()->sync($selectedIncidents);
 
-        return redirect()->route('heros.show', $hero)->with('status-success', 'Héros mis à jour avec succès');
+        return redirect()->route('heros.show', $hero)->with('status-warning', 'Héros mis à jour avec succès');
     }
 
     public function destroy(Heros $hero)
     {
-
         if ($hero->user_id !== Auth::id()) {
             return redirect()->route('heros.index')->with('status-danger', 'Vous n\'êtes pas autorisé à supprimer ce héros.');
         }
@@ -102,7 +100,7 @@ class HerosController extends Controller
         $hero->incidents()->detach();
         $hero->delete();
 
-        return redirect()->route('heros.index')->with('status-success', 'Héros supprimé avec succès');
+        return redirect()->route('heros.index')->with('status-danger', 'Héros supprimé avec succès');
     }
 
 }

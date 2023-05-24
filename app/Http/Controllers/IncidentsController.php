@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\IncidentsRequest;
 use App\Models\Incidents;
+use Exception;
 use Illuminate\Http\Request;
 
 class IncidentsController extends Controller
@@ -24,7 +25,7 @@ class IncidentsController extends Controller
     {
         Incidents::create($request->validated());
 
-        return redirect()->route('incidents.index')->with('success', 'Incident created successfully.');
+        return redirect()->route('incidents.index')->with('status-success', 'Incident créé avec succès.');
     }
 
     public function edit(Incidents $incident)
@@ -36,13 +37,17 @@ class IncidentsController extends Controller
     {
         $incident->update($request->validated());
 
-        return redirect()->route('incidents.index')->with('success', 'Incident updated successfully.');
+        return redirect()->route('incidents.index')->with('status-warning', 'Incident mis à jour avec succès.');
     }
 
     public function destroy(Incidents $incident)
     {
-        $incident->delete();
-
-        return redirect()->route('incidents.index')->with('success', 'Incident deleted successfully.');
+        try {
+            $incident->delete();
+            return redirect()->route('incidents.index')->with('status-danger', 'Incident supprimé avec succès.');
+        } catch (Exception $e) {
+            $errorMessage = 'Une erreur s\'est produite lors de la suppression de l\'incident.';
+            return redirect()->route('incidents.index')->with('status-danger', $errorMessage);
+        }
     }
 }

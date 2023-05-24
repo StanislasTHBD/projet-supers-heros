@@ -65,20 +65,51 @@
             </div>
         </div>
     </div>
+
+    <style>
+        html, body {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url({{ asset('image/fd5.jpg') }});
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -1;
+        }
+
+        .content-container {
+            padding: 150px 300px;
+        }
+
+        .content-container {
+            padding: 150px 300px;
+        }
+
+        @media (max-width: 1350px) {
+            .content-container {
+                padding: 150px 50px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .content-container {
+                padding: 150px 40px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .content-container {
+                padding: 150px 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .content-container {
+                padding: 150px 15px;
+            }
+        }
+    </style>
 @endsection
 
-<style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-    }
-
-    .full-page-image {
-        background-image: url({{ asset('image/fd5.jpg') }});
-        background-size: cover;
-        background-position: center;
-        width: 100%;
-        height: 100%;
-    }
-</style>

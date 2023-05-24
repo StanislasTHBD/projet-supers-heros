@@ -82,11 +82,14 @@
 
     <script>
         function initMap(latitude, longitude) {
-            var map = L.map('map').setView([latitude, longitude], 9);
+            var map = L.map('map', {
+                minZoom: 3,
+                maxZoom: 18,
+                maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180))
+            }).setView([latitude, longitude], 9);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-                maxZoom: 18,
             }).addTo(map);
 
             var redIcon = L.icon({
@@ -156,7 +159,8 @@
 
                     var heroCard = document.createElement('div');
                     heroCard.classList.add('col-md-6');
-                    heroCard.innerHTML = '<div class="card bg-dark mb-3"><div class="card-body"><h5 class="card-title">' + hero.name + '</h5><p class="card-text">Téléphone: ' + hero.phone_number + '</p><p class="card-text">Incidents: ' + incidentsString + '</p><p class="card-text">Localisation: (' + heroLatitude + ', ' + heroLongitude + ')</p><p class="card-text">Distance: ' + heroData.distanceHero + ' km</p></div></div>';
+                    // <p class="card-text">Incidents: ' + incidentsString + '</p>
+                    heroCard.innerHTML = '<div class="card bg-dark mb-3"><div class="card-body"><h5 class="card-title">' + hero.name + '</h5><p class="card-text">Téléphone: ' + hero.phone_number + '</p><p class="card-text">Localisation: (' + heroLatitude + ', ' + heroLongitude + ')</p><p class="card-text">Distance: ' + heroData.distanceHero + ' km</p></div></div>';
                     document.getElementById('heroes-list').appendChild(heroCard);
                 });
             }
