@@ -7,6 +7,7 @@ use App\Models\Heros;
 use App\Models\Incidents;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class HerosController extends Controller
 {
@@ -53,6 +54,13 @@ class HerosController extends Controller
 
         $heros = Heros::create($herosData);
 
+        if ($request->hasFile('image')) {
+            $request->file('image')->store('public/heros');
+
+            $heros->image = 'storage/heros/'.$request->file('image')->hashName();
+            $heros->save();
+        }
+
         $selectedIncidents = $request->input('incidents', []);
         $heros->incidents()->attach($selectedIncidents);
 
@@ -83,6 +91,19 @@ class HerosController extends Controller
 
         $herosData = $request->validated();
 
+        if ($request->hasFile('image')) {
+
+            if ($hero->image && $hero->image !== 'storage/hero/default.jpg') {
+                $oldImagePath = public_path($hero->image);
+                if (File::exists($oldImagePath)) {
+                    File::delete($oldImagePath);
+                }
+            }
+
+            $newImagePath = $request->file('image')->store('public/heros');
+            $herosData['image'] = 'storage/heros/' . basename($newImagePath);
+        }
+
         $hero->update($herosData);
 
         $selectedIncidents = $request->input('incidents', []);
@@ -95,6 +116,13 @@ class HerosController extends Controller
     {
         if ($hero->user_id !== Auth::id()) {
             return redirect()->route('heros.index')->with('status-danger', 'Vous n\'êtes pas autorisé à supprimer ce héros.');
+        }
+
+        if ($hero->image && $hero->image !== 'storage/hero/default.jpg') {
+            $oldImagePath = public_path($hero->image);
+            if (File::exists($oldImagePath)) {
+                File::delete($oldImagePath);
+            }
         }
 
         $hero->incidents()->detach();

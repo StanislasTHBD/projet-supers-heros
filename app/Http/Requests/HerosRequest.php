@@ -27,6 +27,7 @@ class HerosRequest extends FormRequest
 
         return [
             'name' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'phone_number' => 'required|string',

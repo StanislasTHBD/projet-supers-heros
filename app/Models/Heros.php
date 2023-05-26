@@ -11,6 +11,7 @@ class Heros extends Model
 
     protected $fillable = [
         'name',
+        'image',
         'latitude',
         'longitude',
         'phone_number',

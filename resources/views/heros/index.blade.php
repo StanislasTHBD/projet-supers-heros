@@ -38,22 +38,27 @@
             @foreach ($heros as $hero)
                 <div class="card mb-3 bg-dark bg-opacity-75 border-opacity-50 text-light">
                     <div class="card-header">
-                        <h3 class="card-title">{{ $hero->name }}</h3>
+                        <h3 class="card-title p-2">{{ $hero->name }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col">
+                            <div class="col-md-2 d-flex justify-content-between align-items-center">
+                                <img class="card-img-top img-center rounded-circle" src="{{ asset($hero->image) }}" alt="{{ $hero->name }}">
+                            </div>
+                            <div class="col-md-5">
                                 <h4>Information du héro :</h4>
                                 <p>Téléphone: {{ $hero->phone_number }}</p>
+                                <p>Ville: {{ $hero->city }}</p>
                                 <p>Localisation (lat, lon): {{ $hero->latitude }}, {{ $hero->longitude }}</p>
                             </div>
-                            <div class="col">
+                            <div class="col-md-5">
                                 <h4 class="card-text">Liste des incidents:</h4>
-                                @foreach ($hero->incidents as $incident)
-                                    <p class="card-text">{{ $incident->name }}</p>
-                                @endforeach
+                                <p>
+                                    @foreach ($hero->incidents as $incident)
+                                        <span class="badge rounded-2 text-bg-danger p-2">{{ $incident->name }}</span>
+                                    @endforeach
+                                </p>
                             </div>
-
                         </div>
                         <hr>
                         <div class="row">
@@ -143,7 +148,20 @@
         var marker = L.marker([{{ $hero->latitude }}, {{ $hero->longitude }}]).addTo(map);
         var incidents = {!! json_encode($hero->incidents->pluck('name')) !!};
         var incidentsString = Array.isArray(incidents) ? incidents.join(', ') : incidents;
-        marker.bindPopup("<h4>{{ $hero->name }}</h4><p>Incidents: " + incidentsString + "</p><p>Téléphone: {{ $hero->phone_number }}</p>");
+        marker.bindPopup(`
+            <div class="custom-popup" style="width: 300px; height: 150px;">
+                 <div class="row">
+                    <div class="col-md-4 d-flex justify-content-between align-items-center">
+                          <img class="card-img-top img-center rounded-circle" src="{{ asset($hero->image) }}" alt="{{ $hero->name }}">
+                    </div>
+                    <div class="col-md-8">
+                        <h4>{{ $hero->name }}</h4>
+                        <p>Incidents: ${incidentsString}</p>
+                        <p>Téléphone: {{ $hero->phone_number }}</p>
+                    </div>
+                </div>
+            </div>
+        `);
         markers.push(marker);
         @endforeach
     </script>

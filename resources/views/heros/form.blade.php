@@ -8,11 +8,16 @@
         <div class="alert alert-danger mt-3">
             <ul>
                 @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    @if ($error === 'The Incidents field must have between 1 and 3 items.')
+                        <li>Vous devez choisir entre 1 et 3 incidents dans la liste.</li>
+                    @else
+                        <li>{{ $error }}</li>
+                    @endif
                 @endforeach
             </ul>
         </div>
     @endif
+
     <div class="card bg-secondary bg-opacity-75 border-opacity-50 text-light">
         <div class="card-header">
             <h1>{{ isset($hero) ? 'Modifier l\'Héros' : 'Créer un Héros' }}</h1>
@@ -35,7 +40,7 @@
 
             <br/>
 
-            <form action="{{ isset($hero) ? route('heros.update', $hero) : route('heros.store') }}" method="POST">
+            <form action="{{ isset($hero) ? route('heros.update', $hero) : route('heros.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if (isset($hero))
                     @method('PUT')
@@ -58,7 +63,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="phone_number" class="form-label"><h5>Téléphone</h5></label>
-                                    <input type="text" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number" name="phone_number" value="{{ old('phone_number', isset($hero) ? $hero->phone_number : '') }}">
+                                    <input type="number" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number" name="phone_number" value="{{ old('phone_number', isset($hero) ? $hero->phone_number : '') }}">
                                     @error('phone_number')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -144,8 +149,35 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary">Valider</button>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-md-4 d-flex justify-content-between align-items-center">
+                            @if(isset($hero))
+
+                                @if ($hero->image)
+                                    <img class="card-img-top img-center rounded-circle" src="{{ asset($hero->image) }}" alt="" width="250"/>
+                                @endif
+
+                            @endif
+                        </div>
+                        @if(isset($hero))
+                            <div class="col-md-8">
+                                @else
+                                    <div class="col-md-12">
+                                        @endif
+                                        <label for="image" class="form-label">Image :</label>
+                                        <input type="file" name="image" id="image" class="form-control @error('image') is-invalid @enderror"/>
+                                        @error('image')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                            </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Valider</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -283,7 +315,7 @@
                     }
 
                     if (data.address.postcode) {
-                    document.getElementById('postal_code').value = data.address.postcode;
+                        document.getElementById('postal_code').value = data.address.postcode;
                     } else if (data.address.country_code) {
                         document.getElementById('postal_code').value = data.address.country_code;
                     } else {

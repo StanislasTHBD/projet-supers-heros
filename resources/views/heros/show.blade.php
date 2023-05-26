@@ -22,21 +22,26 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6">
-                    <div class="card bg-dark mb-3">
-                        <div class="card-body">
-                            <h5 class="card-title">Incidents</h5>
-                            <ul class="list-group">
-                                @foreach ($hero->incidents as $incident)
-                                    <li class="list-group-item">{{ $incident->name }}</li>
-                                @endforeach
-                            </ul>
+                <div class="col-md-6 d-flex justify-content-center">
+                    <div class="card bg-black bg-opacity-50 mb-3 d-flex justify-content-center">
+                        <div class="card bg-dark rounded-circle mb-3">
+                            <div class="card-body">
+                                <img class="card-img-top img-center rounded-circle" width="auto" height="300" src="{{ asset($hero->image) }}" alt="{{ $hero->name }}">
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="card bg-dark mb-3">
                         <div class="card-body">
+
+                            <h5 class="card-title">Incidents</h5>
+                            <p>
+                                @foreach ($hero->incidents as $incident)
+                                    <span class="badge rounded-2 text-bg-danger p-2">{{ $incident->name }}</span>
+                                @endforeach
+                            </p>
+                            <hr>
                             <h5 class="card-title">Téléphone</h5>
                             <p class="card-text">{{ $hero->phone_number }}</p>
                             <hr>

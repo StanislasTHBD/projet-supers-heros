@@ -31,6 +31,7 @@
                                 <div class="col">
                                     <h4>Information de l'incident :</h4>
                                     <p>Incident: {{ $declaration->incident->name }}</p>
+                                    <p>Ville: {{ $declaration->city }}</p>
                                     <p>Localisation (lat, lon): {{ $declaration->latitude }}, {{ $declaration->longitude }}</p>
                                 </div>
 
@@ -127,7 +128,12 @@
             @foreach ($declarations as $declaration)
             L.marker([{{ $declaration->latitude }}, {{ $declaration->longitude }}], { icon: redIcon })
                 .addTo(map)
-                .bindPopup("Ville: {{ $declaration->city }}<br>Incident: {{ $declaration->incident->name }}");
+                .bindPopup(`
+                <div class="p-3">
+                <h4>{{ $declaration->incident->name }}</h4>
+                <p>Ville: {{ $declaration->city }}</p>
+                </div>
+            `);
             @endforeach
 
         </script>

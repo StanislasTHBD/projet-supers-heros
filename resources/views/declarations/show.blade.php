@@ -138,7 +138,20 @@
                 var marker = L.marker([heroLatitude, heroLongitude]).addTo(map);
                 var incidents = {!! json_encode($hero->incidents->pluck('name')) !!};
                 var incidentsString = Array.isArray(incidents) ? incidents.join(', ') : incidents;
-                marker.bindPopup("<h4>{{ $hero->name }}</h4><p>Incidents: " + incidentsString + "</p><p>Téléphone: {{ $hero->phone_number }}</p>");
+                marker.bindPopup(`
+                   <div class="custom-popup" style="width: 300px; height: 150px;">
+                        <div class="row">
+                            <div class="col-md-4 d-flex justify-content-between align-items-center">
+                                  <img class="card-img-top img-center rounded-circle" src="{{ asset($hero->image) }}" alt="{{ $hero->name }}">
+                            </div>
+                            <div class="col-md-8">
+                                <h4>{{ $hero->name }}</h4>
+                                <p>Incidents: ${incidentsString}</p>
+                                <p>Téléphone: {{ $hero->phone_number }}</p>
+                            </div>
+                        </div>
+                    </div>
+                `);
             }
             @endforeach
 
@@ -157,10 +170,13 @@
                     var heroLatitude = hero.latitude;
                     var heroLongitude = hero.longitude;
 
+                    var ipAddress = window.location.hostname;
+                    var imageSrc = 'http://' + ipAddress + ':8000/' + hero.image;
+
                     var heroCard = document.createElement('div');
                     heroCard.classList.add('col-md-6');
                     // <p class="card-text">Incidents: ' + incidentsString + '</p>
-                    heroCard.innerHTML = '<div class="card bg-dark mb-3"><div class="card-body"><h5 class="card-title">' + hero.name + '</h5><p class="card-text">Téléphone: ' + hero.phone_number + '</p><p class="card-text">Localisation: (' + heroLatitude + ', ' + heroLongitude + ')</p><p class="card-text">Distance: ' + heroData.distanceHero + ' km</p></div></div>';
+                    heroCard.innerHTML = '<div class="card bg-dark mb-3"><div class="card-body"><div class="row"><div class="col-md-4 d-flex justify-content-between align-items-center"><img class="card-img-top img-center rounded-circle" src="'+imageSrc+'"></div><div class="col-md-8"><div class="row"><h3 class="card-title">' + hero.name + '</h3><p class="card-text">Téléphone: ' + hero.phone_number + '</p><p class="card-text">Localisation: (' + heroLatitude + ', ' + heroLongitude + ')</p><p class="card-text">Distance: ' + heroData.distanceHero + ' km</p></div></div></div></div>';
                     document.getElementById('heroes-list').appendChild(heroCard);
                 });
             }
